@@ -3,7 +3,7 @@ from time import sleep
 import random
 from pygame.locals import *
 import math
-
+import numpy as np
 
 
 def distance(x1,y1,x2,y2):
@@ -20,7 +20,7 @@ def normalize(vector): # turn a total value into a constant ammount (hard to des
     l = length(vector)
     if l != 0:
         return (vector[0] / l, vector[1] / l)
-    return None
+    return ([1,1])
 
 def distance_check(self, dist):
     dist_x = dist[0] ** 2 # gets absolute value of the x distance
@@ -43,53 +43,86 @@ ball = pygame.image.load("ball.bmp")
 quadcopter = ball.get_rect()
 ball2 = pygame.image.load("tree.png")
 tree = ball2.get_rect()
-tree = tree.move(400,120)
-R = int(tree.width/2*math.sqrt(2))
+tree = tree.move(300,150)
+R = tree.width/2*math.sqrt(2)
 x1 = tree.centerx
 y1 = tree.centery
+slope1 = 1
+slope2 = 1
+slope3 = 1
+direction=([1,1])
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
 
-    D2 = quadcopter.centerx*goal[1] - goal[0]*quadcopter.centery
-    dp = math.sqrt(math.pow(quadcopter.centerx - goal[0],2) + math.pow(quadcopter.centery - goal[1],2))
-    delta = math.pow(R,2)*math.pow(dp,2) - math.pow(D2,2)
+
+    px1 = quadcopter.centerx - tree.centerx
+    py1 = quadcopter.centery - tree.centery
+    px2 = goal[0] - tree.centerx
+    py2 = goal[1] - tree.centery
+    dx = px2 - px1
+    dy = py2 - py1
+    dr = math.sqrt(math.pow(dx,2) + math.pow(dy,2))
+    D2 = px1*py2 - px2*py1
+    delta = R*R*dr*dr - D2*D2
 
 
-    speed = 2    
+    speed = 2
 
-    
-    D = int(math.sqrt(math.pow(tree.centerx - quadcopter.centerx, 2) + math.pow(tree.centery - quadcopter.centery,2)))
-    L = int(math.sqrt(math.fabs(math.pow(D,2) - math.pow(R,2))))
+    D = math.sqrt(math.pow(tree.centerx - quadcopter.centerx, 2) + math.pow(tree.centery - quadcopter.centery,2))
+    L = math.sqrt(math.fabs(math.pow(D,2) - math.pow(R+15,2)))
     x0 = quadcopter.centerx
     y0 = quadcopter.centery
     h = R*L/D
-    a = (math.pow(L,2) - math.pow(R,2) + math.pow(D,2))/(2*D)
+    a = (math.pow(L,2) - math.pow(R+15,2) + math.pow(D,2))/(2*D)
     x2 = x0 + a * (x1 - x0) / D
     y2 = y0 + a * (y1 - y0) / D
-    x31 = x2 - h * (y1 - y0) / D
-    y31 = y2 + h * (x1 - x0) / D
-    x32 = x2 + h * (y1 - y0) / D
-    y32 = y2 - h * (x1 - x0) / D
-    
-    print(quadcopter.centery)
-    if (delta<0):
-        direction = normalize(distance(quadcopter.centerx,quadcopter.centery,goal[0],goal[1]))
-    else:
+    x33 = x2 - h * (y1 - y0) / D
+    y33 = y2 + h * (x1 - x0) / D
+    x34 = x2 + h * (y1 - y0) / D
+    y34 = y2 - h * (x1 - x0) / D
+    try:
+        x31 = x33 + (x33 - quadcopter.centerx)/length([x33-quadcopter.centerx,y33-quadcopter.centery])*70
+    except ZeroDivisionError:
+        x31 = x33
+    try:
+        y31 = y33 + (y33 - quadcopter.centery)/length([x33-quadcopter.centerx,y33-quadcopter.centery])*70
+    except:
+        y31 = y33
+    try:
+        x32 = x34 + (x34 - quadcopter.centerx)/length([x34-quadcopter.centerx,y34-quadcopter.centery])*70
+    except:
+        x32 = x34
+    try:
+        y32 = y34 + (y34 - quadcopter.centery)/length([x34-quadcopter.centerx,y34-quadcopter.centery])*70
+    except:
+        y32 = y34
+    if(goal[0] - quadcopter.centerx != 0):
+        slope1 = math.fabs((float(goal[1])-quadcopter.centery)/(goal[0] - quadcopter.centerx))
+    if(x31 - quadcopter.centerx != 0):
+        slope2 = math.fabs((float(y31)-quadcopter.centery)/(x31 - quadcopter.centerx))
+    if(x32 - quadcopter.centerx != 0):
+        slope3 = math.fabs((float(y32)-quadcopter.centery)/(x32 - quadcopter.centerx))
+    if (delta>0):
         if(math.sqrt(math.pow(x31-goal[0], 2) + math.pow(y31-goal[1], 2)) > math.sqrt(math.pow(x32-goal[0], 2) + math.pow(y32-goal[1], 2))):
             direction = normalize(distance(quadcopter.centerx,quadcopter.centery,x32,y32))
-            if (math.sqrt(math.pow(quadcopter.centerx - x32,2) + math.pow(quadcopter.centery - y32, 2)) < speed):
-                speed = 1
+            quadcopter.centerx += speed*direction[0]
+            quadcopter.centery += speed*direction[1]
         else:
             direction = normalize(distance(quadcopter.centerx,quadcopter.centery,x31,y31))
-            if (math.sqrt(math.pow(quadcopter.centerx - x31,2) + math.pow(quadcopter.centery - y31, 2)) < speed):
-                speed = 1
+            quadcopter.centerx += speed*direction[0]
+            quadcopter.centery += speed*direction[1]
 
+    else:
+
+        direction = normalize(distance(quadcopter.centerx,quadcopter.centery,goal[0],goal[1]))
+        quadcopter.centerx += speed*(direction[0])
+        quadcopter.centery += speed*(direction[1])
 
     screen.fill(black)
     screen.blit(ball, quadcopter)
     screen.blit(ball2, tree)
-    pygame.draw.circle(screen, (0, 127, 255), tree.center, R, 1)
+    pygame.draw.circle(screen, (0, 127, 255), tree.center, int(R), 1)
     pygame.draw.circle(screen, (0, 127, 255), goal, 2, 1)
     pygame.draw.line(screen, (70, 127, 40), quadcopter.center, goal, 2)
     pygame.draw.line(screen, (70, 127, 255), quadcopter.center, (x31, y31), 2)
@@ -100,12 +133,7 @@ while 1:
      #greedyGoal = int(math.sqrt(math.fabs(math.pow((x0-x1), 2), math.pow((y0-y1), 2))))
      
 
-    quadcopter.centerx += speed*direction[0]
-    quadcopter.centery += speed*direction[1]
-    
 
 
 
-
-    sleep(0.0001)
 
