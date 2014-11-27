@@ -40,6 +40,8 @@ def calculateDelta(obstacle):
     return delta
 
 def calculateTangentLines(obstacle):
+    x1 = obstacle.centerx
+    y1 = obstacle.centery
     D = math.sqrt(math.pow(obstacle.centerx - quadcopterc[0], 2) + math.pow(obstacle.centery - quadcopterc[1],2))
     L = math.sqrt(math.fabs(math.pow(D,2) - math.pow(R,2)))
     h = R*L/D
@@ -117,38 +119,77 @@ for bucket in obstacles:
                 pass
     obstacles_bucket.append(temp_bucket)
 
-print(obstacles_bucket)
 
 
 
 
 
-
-
-
-x1 = tree.centerx
-y1 = tree.centery
 direction=([1,1])
 speed = 2
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
 
+    delta2 = 0
+    min_distance = sys.maxint
+    min_obstacle = obstacles_bucket[0][0]
+    for bucket in obstacles_bucket:
+        for obstacle in bucket:
+            delta = calculateDelta(obstacle)
+            if(delta>0):
+                delta2 = 1
+                distanc = pointDistance(obstacle, quadcopterc)
+                if(distanc<min_distance):
+                    min_distance = distanc
+                    min_obstacle = obstacle
+    tree = min_obstacle
+    obstcls = []
+    for bucket in obstacles_bucket:
+        if min_obstacle in bucket:
+            obstcls = bucket
+    tangents = []
+    for obstacle in obstcls:
+        (x31,y31,x32,y32) = calculateTangentLines(obstacle)
+        tangents.append((x31,y31))
+        tangents.append((x32,y32))
+    angle = 100
+    x31 = 0
+    y31 = 0
+    x32 = 0
+    y32 = 0
+
+    for tangent1 in tangents:
+        for tangent2 in tangents:
+            if(tangent1==tangent2):
+                continue
+            u1 = tangent1[0] - quadcopter.centerx
+            u2 = tangent1[1] - quadcopter.centery
+            v1 = tangent2[0] - quadcopter.centerx
+            v2 = tangent2[1] - quadcopter.centery
+            cos = (u1*v1 + u2*v2)/((math.sqrt(math.pow(u1,2) + math.pow(u2, 2)))*(math.sqrt(math.pow(v1,2) + math.pow(v2,2))))
+            print(angle)
+            if (cos<angle):
+                angle = cos
+                x31 = tangent1[0]
+                y31 = tangent1[1]
+                x32 = tangent2[0]
+                y32 = tangent2[1]
+            else:
+                continue
+
 
     # Checking if our path is clear using circle intersection
     # More info - http://mathworld.wolfram.com/Circle-LineIntersection.html
 
-    delta = calculateDelta(tree)
    # delta2 = calculateDelta(tree2)
 
 
     # Calculating the tangent lines
 
 
-    (x31,y31,x32,y32) = calculateTangentLines(tree)
    # (x312,y312,x322,y322) = calculateTangentLines(tree2)
 
-    if (delta>0):
+    if (delta2>0):
         if(length([x31-goal[0],y31-goal[1]]) > length([x32-goal[0], y32-goal[1]])):
             (x32,y32) = updatePoint(x32,y32)
             direction = normalize(distance(quadcopterc[0],quadcopterc[1],x32,y32))
@@ -175,11 +216,12 @@ while 1:
 
     pygame.draw.circle(screen, (0, 127, 255), goal, 2, 1)
     pygame.draw.line(screen, (70, 127, 40), quadcopter.center, goal, 2)
-    pygame.draw.line(screen, (70, 20, 100), quadcopter.center, (x31, y31), 2)
-    pygame.draw.line(screen, (70, 20, 100), quadcopter.center, (x32, y32), 2)
+    if(delta2>0):
+        pygame.draw.line(screen, (70, 20, 100), quadcopter.center, (x31, y31), 2)
+        pygame.draw.line(screen, (70, 20, 100), quadcopter.center, (x32, y32), 2)
 
    # print(direction[0]*30+quadcopter.centerx, direction[1]*30+quadcopter.centery)
-    pygame.draw.line(screen, (170, 67, 160), (0,0), (direction[0]*300, direction[1]*300), 2)
+   # pygame.draw.line(screen, (170, 67, 160), (0,0), (direction[0]*300, direction[1]*300), 2)
     pygame.display.flip()
     pygame.time.wait(2)
    # if(math.sqrt(math.pow(quadcopter.centerx - goal[0], 2) + math.pow(quadcopter.centery - goal[1], 2)) <2):
