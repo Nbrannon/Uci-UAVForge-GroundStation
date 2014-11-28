@@ -5,7 +5,6 @@ from pygame.locals import *
 import math
 import numpy as np
 
-
 def pointDistance(p1,p2):
     return math.sqrt(math.pow(p1[0]-p2[0],2) + math.pow(p1[1]-p2[1],2))
 
@@ -15,7 +14,7 @@ def distance(x1,y1,x2,y2):
     return (distx, disty)
 
 def length(vector): # get length (used for normalize)
-        return math.sqrt((vector[0]**2 + vector[1]**2))
+    return math.sqrt((vector[0]**2 + vector[1]**2))
 
 
 def normalize(vector): # turn a total value into a constant amount (hard to describe)
@@ -25,6 +24,9 @@ def normalize(vector): # turn a total value into a constant amount (hard to desc
     if l != 0:
         return (vector[0] / l, vector[1] / l)
     return ([1,1])
+
+
+
 
 def calculateDelta(obstacle):
     # We have to subtract tree x and y because our circle does not have coordinates (0,0)
@@ -77,14 +79,14 @@ black = 250, 250, 250
 goal = (800, 400)
 ball = pygame.image.load("ball.bmp")
 quadcopter = ball.get_rect()
-quadcopterc = [1.0, 1.0]
+quadcopterc = [quadcopter.centerx, quadcopter.centery]
 
 pic = pygame.image.load("tree2.png")
 tree = pic.get_rect()
-#tree = tree.move(-tree.width/2,-tree.height/2)
+tree = tree.move(-tree.width/2,-tree.height/2)
 R = tree.width/2*math.sqrt(2)
 
-points = [(410,400),(850,570),(430,200), (270,300), (900, 650)]
+points = [(400,150),(300,200),(1000,700),(300,700),(500,400)]
 obstacles = []
 obstacles_bucket = []
 
@@ -125,7 +127,7 @@ for bucket in obstacles:
 
 
 direction=([1,1])
-speed = 2
+speed = 7
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
@@ -135,8 +137,9 @@ while 1:
     min_obstacle = obstacles_bucket[0][0]
     for bucket in obstacles_bucket:
         for obstacle in bucket:
+            # delta = calculateDelta(obstacle)
             delta = calculateDelta(obstacle)
-            if(delta>0):
+            if(delta>0 and distance(quadcopterc[0], quadcopterc[1], obstacle.centerx, obstacle.centery) < distance(quadcopterc[0],quadcopterc[1],goal[0],goal[1])):
                 delta2 = 1
                 distanc = pointDistance(obstacle, quadcopterc)
                 if(distanc<min_distance):
@@ -157,7 +160,6 @@ while 1:
     y31 = 0
     x32 = 0
     y32 = 0
-
     for tangent1 in tangents:
         for tangent2 in tangents:
             if(tangent1==tangent2):
@@ -167,7 +169,6 @@ while 1:
             v1 = tangent2[0] - quadcopter.centerx
             v2 = tangent2[1] - quadcopter.centery
             cos = (u1*v1 + u2*v2)/((math.sqrt(math.pow(u1,2) + math.pow(u2, 2)))*(math.sqrt(math.pow(v1,2) + math.pow(v2,2))))
-            print(angle)
             if (cos<angle):
                 angle = cos
                 x31 = tangent1[0]
@@ -220,10 +221,10 @@ while 1:
         pygame.draw.line(screen, (70, 20, 100), quadcopter.center, (x31, y31), 2)
         pygame.draw.line(screen, (70, 20, 100), quadcopter.center, (x32, y32), 2)
 
+
    # print(direction[0]*30+quadcopter.centerx, direction[1]*30+quadcopter.centery)
-   # pygame.draw.line(screen, (170, 67, 160), (0,0), (direction[0]*300, direction[1]*300), 2)
     pygame.display.flip()
-    pygame.time.wait(2)
+    pygame.time.wait(22)
    # if(math.sqrt(math.pow(quadcopter.centerx - goal[0], 2) + math.pow(quadcopter.centery - goal[1], 2)) <2):
     #    os.system("pause")
 
