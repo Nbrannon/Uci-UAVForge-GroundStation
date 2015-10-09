@@ -8,12 +8,12 @@
 #include <QApplication>
 
 #include "mainwindow.h"
-#include "mapplanning.h"
+//#include "mapplanning.h"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    MainWindow x;
-    x.showFullScreen();
+    MainWindow *x = new MainWindow();
+    x->showFullScreen();
     //x.showMaximized();  //Personally, I like this one better  :P
     return a.exec();
 }

@@ -37,7 +37,9 @@ SOURCES += main.cpp\
     gsserver.cpp \
     gsclient.cpp \
     jsonobject.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    networklistener.cpp \
+    telemetrypoint.cpp
 QMAKE_MAC_SDK = macosx10.9
 HEADERS  += mainwindow.h \
     mapplanning.h \
@@ -48,11 +50,13 @@ HEADERS  += mainwindow.h \
     popwindowmp.h \
     qcomboboxdelegate.h \
     videoplayer.h \
-    net.h \
     gsserver.h \
     gsclient.h \
     jsonobject.h \
-    qcustomplot.h
+    qcustomplot.h \
+    net.h \
+    networklistener.h \
+    telemetrypoint.h
 
 FORMS    += mainwindow.ui \
     mapplanning.ui \

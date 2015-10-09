@@ -2,6 +2,8 @@
 #define TUTORIAL_H
 
 #include <QWidget>
+#include "ui_tutorial.h"
+#include "mainwindow.h"
 
 namespace Ui {
 class Tutorial;

@@ -3,15 +3,14 @@
  * Recap, and the Tutorial.
  *
  * File added sometime prior to April 30 2015.
- */
+*/
 
-#include <iostream>
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "tutorial.h"
 #include "mapplanning.h"
 #include "mapexecution.h"
 #include "missionrecap.h"
+#include "ui_mainwindow.h"
 
 /* MainWindow class usage:
 

@@ -12,6 +12,7 @@
 #include <QShortcut>
 #include <QPixmap>
 #include <QDebug>
+#include <iostream>
 
 namespace Ui {
 class MainWindow;
@@ -22,11 +23,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    //Constructor and destructor
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
+    //ui - used to do window layout
     Ui::MainWindow *ui;
+    //animation - added by GUI team... don't know what it's for yet
     QPropertyAnimation *animation;
 
 private slots:

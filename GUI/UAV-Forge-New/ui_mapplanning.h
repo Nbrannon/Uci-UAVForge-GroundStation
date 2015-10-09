@@ -31,13 +31,14 @@ public:
     QPushButton *RemoveRow;
     QPushButton *Update;
     QPushButton *Back;
-    QPushButton *ClearPath;
+    QPushButton *clearTable;
+    QPushButton *clearMap;
 
     void setupUi(QDialog *MapPlanning)
     {
         if (MapPlanning->objectName().isEmpty())
             MapPlanning->setObjectName(QStringLiteral("MapPlanning"));
-        MapPlanning->resize(1366, 768);
+        MapPlanning->resize(1522, 919);
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -52,7 +53,7 @@ public:
         MapPlanning->setPalette(palette);
         AddRow = new QPushButton(MapPlanning);
         AddRow->setObjectName(QStringLiteral("AddRow"));
-        AddRow->setGeometry(QRect(380, 70, 31, 31));
+        AddRow->setGeometry(QRect(1450, 520, 31, 31));
         AddRow->setStyleSheet(QLatin1String(" QPushButton { \n"
 "background-color: \"#CCD1D9\"; \n"
 "color: \"#434A54\"; \n"
@@ -66,10 +67,10 @@ public:
         AddRow->setFlat(false);
         tableView = new QTableView(MapPlanning);
         tableView->setObjectName(QStringLiteral("tableView"));
-        tableView->setGeometry(QRect(100, 120, 531, 521));
+        tableView->setGeometry(QRect(110, 560, 1391, 311));
         Execute = new QPushButton(MapPlanning);
         Execute->setObjectName(QStringLiteral("Execute"));
-        Execute->setGeometry(QRect(160, 680, 101, 41));
+        Execute->setGeometry(QRect(120, 510, 101, 41));
         Execute->setStyleSheet(QLatin1String(" QPushButton { \n"
 "background-color: \"#CCD1D9\"; \n"
 "color: \"#434A54\"; \n"
@@ -82,11 +83,11 @@ public:
 " }"));
         webView = new QWebView(MapPlanning);
         webView->setObjectName(QStringLiteral("webView"));
-        webView->setGeometry(QRect(700, 70, 521, 650));
+        webView->setGeometry(QRect(110, 50, 1391, 431));
         webView->setUrl(QUrl(QStringLiteral("about:blank")));
         RemoveRow = new QPushButton(MapPlanning);
         RemoveRow->setObjectName(QStringLiteral("RemoveRow"));
-        RemoveRow->setGeometry(QRect(320, 70, 31, 31));
+        RemoveRow->setGeometry(QRect(1410, 520, 31, 31));
         RemoveRow->setStyleSheet(QLatin1String(" QPushButton { \n"
 "background-color: \"#CCD1D9\"; \n"
 "color: \"#434A54\"; \n"
@@ -99,7 +100,7 @@ public:
 " }"));
         Update = new QPushButton(MapPlanning);
         Update->setObjectName(QStringLiteral("Update"));
-        Update->setGeometry(QRect(280, 680, 131, 41));
+        Update->setGeometry(QRect(250, 510, 121, 41));
         Update->setStyleSheet(QLatin1String(" QPushButton { \n"
 "background-color: \"#CCD1D9\"; \n"
 "color: \"#434A54\"; \n"
@@ -112,7 +113,7 @@ public:
 " }"));
         Back = new QPushButton(MapPlanning);
         Back->setObjectName(QStringLiteral("Back"));
-        Back->setGeometry(QRect(30, 50, 75, 23));
+        Back->setGeometry(QRect(30, 20, 75, 23));
         Back->setStyleSheet(QLatin1String(" QPushButton { \n"
 "background-color: \"#CCD1D9\"; \n"
 "color: \"#434A54\"; \n"
@@ -123,10 +124,23 @@ public:
 " QPushButton:pressed {\n"
 "     background-color: #E6E9ED\n"
 " }"));
-        ClearPath = new QPushButton(MapPlanning);
-        ClearPath->setObjectName(QStringLiteral("ClearPath"));
-        ClearPath->setGeometry(QRect(430, 680, 111, 41));
-        ClearPath->setStyleSheet(QLatin1String(" QPushButton { \n"
+        clearTable = new QPushButton(MapPlanning);
+        clearTable->setObjectName(QStringLiteral("clearTable"));
+        clearTable->setGeometry(QRect(400, 510, 101, 41));
+        clearTable->setStyleSheet(QLatin1String(" QPushButton { \n"
+"background-color: \"#CCD1D9\"; \n"
+"color: \"#434A54\"; \n"
+"border-radius: 10px;\n"
+"font-weight: bold;\n"
+"border: none; \n"
+"}\n"
+" QPushButton:pressed {\n"
+"     background-color: #E6E9ED\n"
+" }"));
+        clearMap = new QPushButton(MapPlanning);
+        clearMap->setObjectName(QStringLiteral("clearMap"));
+        clearMap->setGeometry(QRect(530, 510, 101, 41));
+        clearMap->setStyleSheet(QLatin1String(" QPushButton { \n"
 "background-color: \"#CCD1D9\"; \n"
 "color: \"#434A54\"; \n"
 "border-radius: 10px;\n"
@@ -150,7 +164,8 @@ public:
         RemoveRow->setText(QApplication::translate("MapPlanning", "-", 0));
         Update->setText(QApplication::translate("MapPlanning", "Update Table", 0));
         Back->setText(QApplication::translate("MapPlanning", "Back", 0));
-        ClearPath->setText(QApplication::translate("MapPlanning", "Clear Path", 0));
+        clearTable->setText(QApplication::translate("MapPlanning", "Clear Table", 0));
+        clearMap->setText(QApplication::translate("MapPlanning", "Clear Path", 0));
     } // retranslateUi
 
 };

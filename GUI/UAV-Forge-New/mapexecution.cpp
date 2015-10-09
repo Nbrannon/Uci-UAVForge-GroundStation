@@ -7,26 +7,28 @@
 #include <QWebFrame>
 #include <QPair>
 #include <QList>
+#include <QDebug>
+#include <stdio.h>
+#include <stdlib.h>
 
 MapExecution::MapExecution(QList<QString> strings, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MapExecution)
 {
+    //myServer = new GsServer();
     ui->setupUi(this);
     mapStrings = strings;
     connect(ui->webView->page()->mainFrame(),SIGNAL(javaScriptWindowObjectCleared()),this,SLOT(addClickListener()));
     connect(ui->pushBtnStop,SIGNAL(clicked()),this,SLOT(stopClicked()));
     ui->webView->load(QUrl("qrc:/res/html/mapsExecution.html"));
 
-
-    // Error when sending more than 14 points - crashes with a stack overflow
-    //  Update - the crash occurs when the total number points sent is 15 or greater
-    //      Ex: 10 points and pressing the 'stop' button 5 times makes it crash
     QList <QPair<double, double > > h;
     h << QPair<double, double >(32, 32);
-    myClient.set_list(getDoublePairs(mapStrings));
-    myClient.gsc_connect_start();
-    myClient.gsc_send_message();
+
+    myServer.openServer();
+    connect(&myServer.networkListener,SIGNAL(sendCoordinates()),this,SLOT(sendFlightPlan()));
+    connect(&myServer.networkListener,SIGNAL(logTelemetry(QString)),this,SLOT(newTelemCoord(QString)));
+
 }
 
 MapExecution::MapExecution(QWidget *parent) :
@@ -51,18 +53,37 @@ void MapExecution::finishClicked()
     missionRecap->showFullScreen();
 }
 
-void MapExecution::stopClicked(){
+
+void MapExecution::newTelemCoord(QString msgString){
+    double lat = msgString.split(',').at(0).toDouble();
+    double lng = msgString.split(',').at(1).toDouble();
+    long time = msgString.split(',').at(2).toLong();
+    std::cout << time << std::endl;
+    //plotPosition(lat,lng);
+}
+
+void MapExecution::sendFlightPlan(){
+    std::cout << "Sending..." << std::endl;
+    QList<QPair<double,double> > coords = getDoublePairs(mapStrings);
+    myServer.sendMessage((char*)std::to_string(coords.length()).c_str(), 10, 11, myServer.uav_fd);
+    char msgBuffer[4096];
+    myServer.formatCoordinatesToSend(msgBuffer, 4096, coords);
+    myServer.sendMessage(msgBuffer,strlen(msgBuffer),myServer.maxPackSize,myServer.uav_fd);
+    std::cout << "done!" << std::endl;
+}
+
+
+void MapExecution::stopClicked() {
     /* Sends the point (999.99,999.99) to the UAV. Used as a code for stop.
     Function added by Jordan Dickson March 9th 2015. */
     QList <QPair<double, double > > h;
     h << QPair<double, double >(999.99,999.99);
-    myClient.set_list(h);
-    myClient.gsc_send_message();
+    //myClient.set_list(h);
+    //myClient.gsc_send_message();
 }
 
-void MapExecution::returnHomeClicked()
-/* would not return back to home, it is now fixed. Arash */
-{
+void MapExecution::returnHomeClicked() {
+    /* would not return back to home, it is now fixed. Arash */
     MainWindow *mainwindow = new MainWindow();
     mainwindow->showFullScreen();
     this -> close();
@@ -166,13 +187,16 @@ void MapExecution::addNewMap(){
     setMap(mapStrings);
 
     //used to initiate the simulated imput -- delete later
-    ui->webView->page()->mainFrame()->evaluateJavaScript("simulateInput()");
+    //ui->webView->page()->mainFrame()->evaluateJavaScript("simulateInput()");
 }
 
 void MapExecution::plotPosition(double lat, double lng){
     /*  Sends a (latitude,longitude) pair to the map to be plotted.
     Used for telemetry. Keeps track of every point sent by appending it
     to the flightPath list. Jordan 2/21/2015 */
+
+    //Problem: Loss of accuracy for some reason.
+    //      Seems to be caused by rounding done by the JS/C++ bridge
   
     flightPath << QPair<double, double>(lat,lng);
     ui->webView->page()->mainFrame()->evaluateJavaScript("addActualPath("+QString::number(lat)+","+QString::number(lng)+")");

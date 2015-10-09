@@ -95,8 +95,8 @@
                     var dx = flightPath.getPath().getAt(count).lng() - simx;
                     var dy = flightPath.getPath().getAt(count).lat() - simy;
                     var dist = Math.sqrt(dx*dx+dy*dy);
-                    var stepx = dx/dist/1800;
-                    var stepy = dy/dist/1800;
+                    var stepx = dx/dist/3800;
+                    var stepy = dy/dist/3800;
                     if(dist > Math.sqrt(stepx*stepx+stepy*stepy)){
                         simx = simx + stepx + wx;
                         simy = simy + stepy + wy;

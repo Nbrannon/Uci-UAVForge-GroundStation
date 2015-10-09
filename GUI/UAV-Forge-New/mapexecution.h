@@ -7,8 +7,10 @@
 #define MapExecution_H
 
 #include <QWidget>
-#include "gsclient.h"
-#include "gsserver.h"
+#include <telemetrypoint.h>
+#include <networklistener.h>
+#include <gsserver.h>
+#include <QString>
 
 namespace Ui {
 class MapExecution;
@@ -22,31 +24,28 @@ public:
     explicit MapExecution(QWidget *parent = 0);
 
     //Constructor for an execution map with a flightpath defined by strings
-    //  strings - This is a list of strings each formatted (Action,Lat,
-    //          LatDir,Lng,LngDir,Behavior). These strings are used to
-    //          create the flightpath that is drawn in the view window.
+    //  strings - This is a list of strings each formatted (Action,Lng,LngDir,
+    //          Lat,LatDir,Behavior). These strings are used to create the
+    //          flightpath that is drawn in the view window.
     explicit MapExecution(QList<QString> strings, QWidget *parent = 0);
 
     //Destructor
     ~MapExecution();
 
-    //mapStrings - contains the list of strings this object is ceated with
-    QList<QString> mapStrings;
+    //getDoublePairs - extracts lat and lng values from a list of strings
+    //          each formatted (Action,Lat,LatDir,Lng,LngDir,Behavior)
+    //  strings - the list of strings from which values will be extracted
+    QList<QPair<double, double> > getDoublePairs(QList<QString> strings);
 
     //myServer - used to recieve data from the UAV
     GsServer myServer;
 
     //myClient - used to send data to the UAV
-    GsClient myClient;
+    //GsClient myClient;
 
     //flightPath - a list of <lat,lng> points recived since the start of the
     //          mission from the UAV. These are the points of the red line.
     QList<QPair<double, double> > flightPath;
-
-    //getDoublePairs - extracts lat and lng values from a list of strings
-    //          each formatted (Action,Lat,LatDir,Lng,LngDir,Behavior)
-    //  strings - the list of strings from which values will be extracted
-    QList<QPair<double, double> > getDoublePairs(QList<QString> strings);
 
 public slots:
     //addNewMap - called in the JavaScript program to load the map described by
@@ -63,12 +62,17 @@ public slots:
     //  lng - the longitude value
     void plotPosition(double lat, double lng);
 
+    void newTelemCoord(QString coordString);
+    void sendFlightPlan();
 private:
     //addPoint - used to add a single point to the planned flight path (the
     //          blue line)
     //  string -  a string formatted (Action,Lat,LatDir,Lng,LngDir,Behavior)
     //          from which the doubles Lat and Lng are extracted
     void addPoint(QString string);
+
+    //mapStrings - contains the list of strings this object is ceated with
+    QList<QString> mapStrings;
 
     //Ui object used to display the window
     Ui::MapExecution *ui;

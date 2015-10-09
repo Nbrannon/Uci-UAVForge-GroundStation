@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MissionRecap_t {
-    QByteArrayData data[12];
-    char stringdata[223];
+    QByteArrayData data[16];
+    char stringdata[286];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,16 +35,22 @@ QT_MOC_LITERAL(2, 26, 0), // ""
 QT_MOC_LITERAL(3, 27, 8), // "position"
 QT_MOC_LITERAL(4, 36, 17), // "updateMediaPlayer"
 QT_MOC_LITERAL(5, 54, 20), // "replayMissionClicked"
-QT_MOC_LITERAL(6, 75, 21), // "on_backButton_clicked"
-QT_MOC_LITERAL(7, 97, 21), // "on_playButton_clicked"
-QT_MOC_LITERAL(8, 119, 21), // "on_stopButton_clicked"
-QT_MOC_LITERAL(9, 141, 25), // "on_openFileButton_clicked"
-QT_MOC_LITERAL(10, 167, 33), // "on_horizontalSlider_sliderPre..."
-QT_MOC_LITERAL(11, 201, 21) // "on_newMission_clicked"
+QT_MOC_LITERAL(6, 75, 21), // "setupRealtimeDataDemo"
+QT_MOC_LITERAL(7, 97, 12), // "QCustomPlot*"
+QT_MOC_LITERAL(8, 110, 10), // "customPlot"
+QT_MOC_LITERAL(9, 121, 16), // "realtimeDataSlot"
+QT_MOC_LITERAL(10, 138, 21), // "on_backButton_clicked"
+QT_MOC_LITERAL(11, 160, 21), // "on_playButton_clicked"
+QT_MOC_LITERAL(12, 182, 21), // "on_stopButton_clicked"
+QT_MOC_LITERAL(13, 204, 25), // "on_openFileButton_clicked"
+QT_MOC_LITERAL(14, 230, 33), // "on_horizontalSlider_sliderPre..."
+QT_MOC_LITERAL(15, 264, 21) // "on_newMission_clicked"
 
     },
     "MissionRecap\0updateSlider\0\0position\0"
     "updateMediaPlayer\0replayMissionClicked\0"
+    "setupRealtimeDataDemo\0QCustomPlot*\0"
+    "customPlot\0realtimeDataSlot\0"
     "on_backButton_clicked\0on_playButton_clicked\0"
     "on_stopButton_clicked\0on_openFileButton_clicked\0"
     "on_horizontalSlider_sliderPressed\0"
@@ -58,7 +64,7 @@ static const uint qt_meta_data_MissionRecap[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -66,19 +72,23 @@ static const uint qt_meta_data_MissionRecap[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   59,    2, 0x0a /* Public */,
-       4,    1,   62,    2, 0x0a /* Public */,
-       5,    0,   65,    2, 0x0a /* Public */,
-       6,    0,   66,    2, 0x08 /* Private */,
-       7,    0,   67,    2, 0x08 /* Private */,
-       8,    0,   68,    2, 0x08 /* Private */,
-       9,    0,   69,    2, 0x08 /* Private */,
-      10,    0,   70,    2, 0x08 /* Private */,
-      11,    0,   71,    2, 0x08 /* Private */,
+       1,    1,   69,    2, 0x0a /* Public */,
+       4,    1,   72,    2, 0x0a /* Public */,
+       5,    0,   75,    2, 0x0a /* Public */,
+       6,    1,   76,    2, 0x0a /* Public */,
+       9,    0,   79,    2, 0x08 /* Private */,
+      10,    0,   80,    2, 0x08 /* Private */,
+      11,    0,   81,    2, 0x08 /* Private */,
+      12,    0,   82,    2, 0x08 /* Private */,
+      13,    0,   83,    2, 0x08 /* Private */,
+      14,    0,   84,    2, 0x08 /* Private */,
+      15,    0,   85,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::LongLong,    3,
     QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 7,    8,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -98,13 +108,26 @@ void MissionRecap::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 0: _t->updateSlider((*reinterpret_cast< qint64(*)>(_a[1]))); break;
         case 1: _t->updateMediaPlayer((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 2: _t->replayMissionClicked(); break;
-        case 3: _t->on_backButton_clicked(); break;
-        case 4: _t->on_playButton_clicked(); break;
-        case 5: _t->on_stopButton_clicked(); break;
-        case 6: _t->on_openFileButton_clicked(); break;
-        case 7: _t->on_horizontalSlider_sliderPressed(); break;
-        case 8: _t->on_newMission_clicked(); break;
+        case 3: _t->setupRealtimeDataDemo((*reinterpret_cast< QCustomPlot*(*)>(_a[1]))); break;
+        case 4: _t->realtimeDataSlot(); break;
+        case 5: _t->on_backButton_clicked(); break;
+        case 6: _t->on_playButton_clicked(); break;
+        case 7: _t->on_stopButton_clicked(); break;
+        case 8: _t->on_openFileButton_clicked(); break;
+        case 9: _t->on_horizontalSlider_sliderPressed(); break;
+        case 10: _t->on_newMission_clicked(); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+        case 3:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QCustomPlot* >(); break;
+            }
+            break;
         }
     }
 }
@@ -134,13 +157,13 @@ int MissionRecap::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
-            *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        if (_id < 11)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 11;
     }
     return _id;
 }

@@ -33,7 +33,7 @@ MapPlanning::MapPlanning(QWidget *parent) :
     connect(ui->RemoveRow,SIGNAL(clicked()),this,SLOT(on_removeRow_clicked()));
     connect(ui->Back,SIGNAL(clicked()),this,SLOT(on_back_clicked()));
     connect(ui->Execute,SIGNAL(clicked()),this,SLOT(on_execute_clicked()));
-    connect(ui->ClearPath,SIGNAL(clicked()),this,SLOT(on_clearPath_clicked()));
+    connect(ui->clearTable,SIGNAL(clicked()),this,SLOT(on_clearPath_clicked()));
     connect(ui->Update,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
 
     //Recreates the c++/JS bridge when the JavaScript window is refreshed
@@ -115,10 +115,6 @@ void MapPlanning::on_back_clicked() {
     MainWindow *mainwindow = new MainWindow();
     mainwindow->showFullScreen();
     this -> close();
-// <<<<<<< HEAD
-    mainwindow->showFullScreen();
-// =======
-// >>>>>>> 4657e7a59454d03e9c48944178e4cdad163200a6
 }
 
 /* Triggered by the "Clear Path" button. Removes all the rows in the table,

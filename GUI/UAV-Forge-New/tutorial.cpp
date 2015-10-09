@@ -1,6 +1,4 @@
 #include "tutorial.h"
-#include "ui_tutorial.h"
-#include "mainwindow.h"
 
 Tutorial::Tutorial(QWidget *parent) :
     QWidget(parent),
