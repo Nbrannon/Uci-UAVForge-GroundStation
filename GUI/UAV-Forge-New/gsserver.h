@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QPair>
+#include <QThread>
 #include "net.h"
 #include "networklistener.h"
 
@@ -18,7 +19,7 @@
   @date 10-3-2015
   @version 1.0
 */
-class GsServer{// : QObject{
+class GsServer : public QThread{
     //Q_OBJECT
 public:
     /**
@@ -39,6 +40,11 @@ public:
       Destructor for GsServer
      */
     ~GsServer();
+
+    /**
+      Override run to implement thread as a server.
+     */
+    void run();
 
     /**
       Opens ther server by hosting it on a socket and listening for

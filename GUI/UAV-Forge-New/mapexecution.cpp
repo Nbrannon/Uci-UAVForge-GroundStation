@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "gsclient.h"
 #include "gsserver.h"
+
 #include <QWebFrame>
 #include <QPair>
 #include <QList>
@@ -25,7 +26,7 @@ MapExecution::MapExecution(QList<QString> strings, QWidget *parent) :
     QList <QPair<double, double > > h;
     h << QPair<double, double >(32, 32);
 
-    myServer.openServer();
+    myServer.start();
     connect(&myServer.networkListener,SIGNAL(sendCoordinates()),this,SLOT(sendFlightPlan()));
     connect(&myServer.networkListener,SIGNAL(logTelemetry(QString)),this,SLOT(newTelemCoord(QString)));
 
@@ -59,7 +60,8 @@ void MapExecution::newTelemCoord(QString msgString){
     double lng = msgString.split(',').at(1).toDouble();
     long time = msgString.split(',').at(2).toLong();
     std::cout << time << std::endl;
-    //plotPosition(lat,lng);
+
+    plotPosition(lat,lng);
 }
 
 void MapExecution::sendFlightPlan(){

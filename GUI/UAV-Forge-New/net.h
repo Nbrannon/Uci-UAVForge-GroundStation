@@ -1,6 +1,5 @@
 #ifndef NET_H
 #define NET_H
-
 //#pragma once
 /*
 This is the gafferon games example of the Net header file.

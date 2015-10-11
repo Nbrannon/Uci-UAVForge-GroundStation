@@ -99,6 +99,10 @@ void* get_in_addr(struct sockaddr *sa)
   return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
+void GsServer::run(){
+    openServer();
+}
+
 int GsServer::openServer(){
     std::cout<< "Starting Server..." << std::endl;
     unsigned short listenPort = port;
