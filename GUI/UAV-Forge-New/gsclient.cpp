@@ -15,25 +15,26 @@ using namespace rapidjson;
 
 #define BUFSIZE 256
 
+//Initiates port for sending to 30005 and the array for address to 0
 GsClient::GsClient()
     :sendport(30005){
     for (int i = 0; i < 4; ++i){
         addressPartsInt[i] = 0;
     }
-    //std::cout << "Please dont devour my mortal soul" << std::endl;
 }
 
-
+// Sets list of coordinate to cl
 void GsClient::set_list(QList<QPair<double , double > > cl){
     cor_list = cl;
 }
 
-
+// Receive coordinates cl to put into a queue of coordinates
+// A helper function to gsc_send_message(); Input is field cor_list    
 void GsClient::getCoordinates(QList<QPair<double, double> > cl){
 
     QQueue<Coordinates> cor_queue;
     jsonObj coordJ;
-
+    // Transfer elements of cl to the queue cor_queue
     Coordinates tempC;
     for(QPair<double,double> pair : cl){
         tempC.latitude = pair.first;
@@ -41,10 +42,13 @@ void GsClient::getCoordinates(QList<QPair<double, double> > cl){
         cor_queue.enqueue(tempC);
     }
 
+    // Transfer cor_queue elements to the jsonObj coordj
     while(!cor_queue.empty())
         coordJ.addCoordinate(cor_queue.dequeue());
 
+    // Receive coordinates in JSON format
     std::string coords = coordJ.coordinatesExtractString();
+    // Converts the string coords to C-string
     size_t len = coords.length();
     char ccoords[4096];
     u_int i;
@@ -54,6 +58,7 @@ void GsClient::getCoordinates(QList<QPair<double, double> > cl){
     const char* jsonStrC = ccoords;
     //std::cout << ccoords << std::endl;
 
+    // Document Orientated Modeling: have document read JSONobj and then have a writer format the JSONobj onto document
     Document documentC;
     documentC.Parse(jsonStrC);
     PrettyWriter<StringBuffer> writerC(bufferC);
@@ -64,7 +69,7 @@ void GsClient::getCoordinates(QList<QPair<double, double> > cl){
 }
 
 
-
+//initialize the connection using hard coded ip address
 int GsClient::gsc_connect_start(){
     addressPartsInt[0] = 127;
     addressPartsInt[1] = 0;
@@ -107,6 +112,8 @@ void GsClient::gsc_send_message(){
 
 //    my_socket.Send(myAddress , data, sizeof(data));
 
+    //convert string from json string buffer to c string
+    //"Send" function uses c function "sendto" which only accepts c strings
     string to_send = bufferC.GetString();
     char to_send_c[BUFSIZE];
     size_t sendLen = to_send.length();
@@ -149,8 +156,19 @@ void GsClient::gsc_send_message(){
 
     std::cout << "WORKING JUST FINE" << std::endl;
 
-}
+    uint i;
+    for (i = 0; i < sendLen; i++)
+        to_send_c[i] = to_send[i];
+    to_send_c[i] = '\0';
+    std::cout << to_send_c << std::endl;
 
+    //assign ip address and send the coordinates
+        net::GS_Address addra = net::GS_Address(addressPartsInt[0], addressPartsInt[1], addressPartsInt[2],            addressPartsInt[3], sendport);
+        my_socket.Send(addra, to_send_c, sizeof(to_send_c));
+
+
+}
+    // Sends the UAV to stop moving physically 
 /*void GsClient::sendStopMessage(){
     bufferC << "Empty String";
     qDebug() << bufferC;
@@ -172,7 +190,7 @@ void GsClient::gsc_send_message(){
     }
 }*/
 
+//close the socket connection
 void GsClient::gsc_close_connection(){
     net::ShutdownSockets();
 }
-
